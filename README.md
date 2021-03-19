@@ -8,3 +8,9 @@ Log Start:
 
 - Created Repo
 - Inserted MSEBot Base code for modification
+
+3/19/2021:
+
+-Inserted climbing header file
+
+-Gave everyone access to repo
