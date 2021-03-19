@@ -24,10 +24,10 @@ void setupMotion (void){
   ledcAttachPin(frontMotorA, 5);
   ledcAttachPin(frontMotorB, 6);
 
-  ledcSetup(5, 300, 8);
+  ledcSetup(5, 300, 8);       // only value found to work for now. Can be changed from 300
   ledcSetup(6, 300, 8);
 
-  dForwardSpeed = 250;
+  dForwardSpeed = 250;        //250 is max speed (determined through testing)
   ledcWrite(1,dForwardSpeed);
   ledcWrite(2,0);
 }
