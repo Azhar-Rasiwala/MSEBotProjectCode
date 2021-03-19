@@ -11,7 +11,10 @@ void setup() {
 }
 
 void loop() {
-
+delay(1000);
+  stopMotion();
+  delay(1000);
+  setupMotion();
 
 }
 
