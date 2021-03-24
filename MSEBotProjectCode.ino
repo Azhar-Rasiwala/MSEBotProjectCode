@@ -39,7 +39,6 @@
   30            VIN                               PWR 5V t 7V                                                                          PWR 5V to 7V
 */
 
-// I fucking hate math
 //Pin assignments
 const int ciHeartbeatLED = 2;
 const int ciPB1 = 27;
@@ -126,12 +125,6 @@ uint8_t rightWheelSpeedMod = 8;
 boolean beaconHit = false;
 
 
-//Servo
-int servoChannel = 6;
-int servoAngle = 0;
-long dutyCycle = 0;
-int servoValue = 0;
-
 // Declare our SK6812 SMART LED object:
 Adafruit_NeoPixel SmartLEDs(2, 25, NEO_GRB + NEO_KHZ400);
 // Argument 1 = Number of LEDs (pixels) in use
@@ -173,9 +166,7 @@ void setup() {
   SmartLEDs.begin();                          // Initialize Smart LEDs object (required)
   SmartLEDs.clear();                          // Set all pixel colours to off
   SmartLEDs.show();                           // Send the updated pixel colours to the hardware
-  //Servo setup
-  ledcAttachPin(15, servoChannel);
-  ledcSetup(servoChannel, 50, 16);
+  
 }
 
 void loop()
