@@ -67,10 +67,11 @@ volatile uint32_t vui32test2;
 
 #include <Adafruit_NeoPixel.h>
 #include <Math.h>
-#include "Motion.h";
+#include "Motion.h"
 #include "MyWEBserver.h"
 #include "BreakPoint.h"
-#include "WDT.h";
+#include "WDT.h"
+#include "climbing.h"
 
 void loopWEBServerButtonresponce(void);
 
@@ -123,7 +124,9 @@ uint8_t rightWheelSpeedMod = 8;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //If beacon is hit change state
 boolean beaconHit = false;
-
+//Climbing Timer
+const int climbInterval = 1000;
+const int startClimb = 0;
 
 // Declare our SK6812 SMART LED object:
 Adafruit_NeoPixel SmartLEDs(2, 25, NEO_GRB + NEO_KHZ400);
@@ -166,7 +169,10 @@ void setup() {
   SmartLEDs.begin();                          // Initialize Smart LEDs object (required)
   SmartLEDs.clear();                          // Set all pixel colours to off
   SmartLEDs.show();                           // Send the updated pixel colours to the hardware
+
   
+  setupClimbing();
+   
 }
 
 void loop()
@@ -374,12 +380,10 @@ void loop()
                       //Scan for beacon
                       case 0:
                         {
-
                           ENC_SetDistance(1, 1);
                           ucMotorState = 2;
                           CR1_ui8LeftWheelSpeed = 135;
                           CR1_ui8RightWheelSpeed = 135;
-
                           break;
                         }
 
@@ -400,7 +404,11 @@ void loop()
                           ucMotorStateIndex2 = 3;
                           break;
                         }
-  
+                      //Start turning motor
+                      case 3:
+                      {
+                          break;
+                      }
                     }
                   }
               }
@@ -507,16 +515,5 @@ void loop()
     digitalWrite(ciHeartbeatLED, btHeartbeat);
     // Serial.println((vui32test2 - vui32test1)* 3 );
   }
-
-}
-
-
-
-void updateServo(int value)
-{
-
-  servoAngle = map(value, 0, 1, 0, 180);
-  dutyCycle = map(servoAngle, 0, 180, 1675, 8050);
-  ledcWrite(servoChannel, dutyCycle);
 
 }
