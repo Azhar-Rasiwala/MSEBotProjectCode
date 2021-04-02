@@ -16,8 +16,8 @@ void setupClimbing (void)
 
 void startMotion()
 {
-  ledcWrite(1, dForwardSpeed);
-  ledcWrite(2, 0);
+  ledcWrite(5, dForwardSpeed);
+  ledcWrite(6, 0);
 }
 
 void stopMotion()
