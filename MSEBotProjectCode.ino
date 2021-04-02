@@ -407,8 +407,19 @@ void loop()
                       //Start turning motor
                       case 3:
                       {
+                          startClimb = millis(); 
+                          startMotion();
+                          ucMotorStateIndex2 = 4; 
                           break;
                       }
+                      case 4:
+                      {
+                        if (millis()- startClimb > climbInterval)
+                        {
+                          stopMotion();
+                        }
+                      }
+                      
                     }
                   }
               }
