@@ -2,7 +2,7 @@
 //MSE 2202
 //Western Engineering base code
 //2020 05 13 E J Porter
-//Modified by: Azhar Rasiwala, 3/18/2021
+//Modified by: Azhar Rasiwala 3/18/2021
 
 /*
   esp32                                           MSE-DuinoV2
