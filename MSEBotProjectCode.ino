@@ -323,7 +323,7 @@ void loop()
                     ENC_SetDistance(35, 35); //35 ticks is a perfect 90 degree turn //note 75 ticks is 180 degrees
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
-                    ucMotorState = 2;
+                    ucMotorState = 3;
                     ucMotorStateIndex = 7;
                     break;
                   }
@@ -332,7 +332,7 @@ void loop()
                   {
                     if (ENC_ISMotorRunning() == 0)
                     {
-                      ucMotorStateIndex = 4;
+                      ucMotorStateIndex = 8;
                       ucMotorState = 5;
                     }
                     break;
