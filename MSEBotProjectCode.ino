@@ -125,8 +125,8 @@ uint8_t rightWheelSpeedMod = 8;
 //If beacon is hit change state
 boolean beaconHit = false;
 //Climbing Timer
-const int climbInterval = 1000;
-const int startClimb = 0;
+const long climbInterval = 8000;
+unsigned long startClimb = 0;
 
 // Declare our SK6812 SMART LED object:
 Adafruit_NeoPixel SmartLEDs(2, 25, NEO_GRB + NEO_KHZ400);
