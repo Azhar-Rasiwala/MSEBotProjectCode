@@ -1,4 +1,4 @@
-//test
+
 //MSE 2202
 //Western Engineering base code
 //2020 05 13 E J Porter
@@ -119,8 +119,8 @@ int iButtonState;
 int iLastButtonState = HIGH;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////FOR QUICK AND EASY MOTOR ADJUSTMENT//////////////////////////////////////////////////
-uint8_t leftWheelSpeedMod = 8;
-uint8_t rightWheelSpeedMod = 8;
+uint8_t leftWheelSpeedMod = 11;
+uint8_t rightWheelSpeedMod = 8; 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //If beacon is hit change state
 boolean beaconHit = false;
@@ -258,13 +258,16 @@ void loop()
               switch (ucMotorStateIndex)
               {
                 //Head Towards Obstacle
+                //Position bot so that end of arduino board aligns w side of door frame furthest from door
+                //Tested w inside bedroom door (blue walls)
+                //Position bot 4.5 inches from wall or else limit switch bumper will crash into wall
                 case 0:
                   {
-                    ENC_SetDistance(240, 240);
-                    ucMotorState = 1;
+                    ENC_SetDistance(100, 100);
+                    ucMotorState = 1; //drive straight
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
-                    ucMotorStateIndex = 1;
+                    ucMotorStateIndex = 1; //proceed to next case
                     break;
                   }
                 //stop
@@ -280,8 +283,8 @@ void loop()
                 //Turn right
                 case 2:
                   {
-                    ENC_SetDistance(35, 35);
-                    ucMotorState = 3;
+                    ENC_SetDistance(115, 115); //turn 270 left to get 90 right bc my robot doesn't like turning right
+                    ucMotorState = 2;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                     ucMotorStateIndex = 3;
@@ -292,15 +295,15 @@ void loop()
                   {
                     if (ENC_ISMotorRunning() == 0)
                     {
+                      ucMotorState = 0;
                       ucMotorStateIndex = 4;
-                      ucMotorState = 5;
                     }
                     break;
                   }
                 //Head Along Obstacle
                 case 4:
                   {
-                    ENC_SetDistance(240, 240);
+                    ENC_SetDistance(70, 70); //need enough clearance so limit switch bumper doesn't bump into object
                     ucMotorState = 1;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -323,7 +326,7 @@ void loop()
                     ENC_SetDistance(35, 35); //35 ticks is a perfect 90 degree turn //note 75 ticks is 180 degrees
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
-                    ucMotorState = 3;
+                    ucMotorState = 2; //left turn
                     ucMotorStateIndex = 7;
                     break;
                   }
@@ -340,7 +343,7 @@ void loop()
                 //Head along obstacle towards beacon
                 case 8:
                   {
-                    ENC_SetDistance(200, 200); //100 ticks means it moves forward 37cm
+                    ENC_SetDistance(260, 260); //100 ticks means it moves forward 37cm
                     ucMotorState = 1;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -357,7 +360,7 @@ void loop()
                     }
                     break;
                   }
-                case 10:
+                case 10: //look for beacon
                   {
                     if (CR1_ui8IRDatum == 0x55 && beaconHit == false)
                     {
