@@ -125,7 +125,7 @@ uint8_t rightWheelSpeedMod = 8;
 //If beacon is hit change state
 boolean beaconHit = false;
 //Climbing Timer
-const long climbInterval = 8000; // edited per robot based on time to reach top
+const long climbInterval = 9000; // edited per robot based on time to reach top
 unsigned long startClimb = 0;
 
 // Declare our SK6812 SMART LED object:
