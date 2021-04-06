@@ -263,7 +263,7 @@ void loop()
                 //Position bot 4.5 inches from wall or else limit switch bumper will crash into wall
                 case 0:
                   {
-                    ENC_SetDistance(100, 100);
+                    ENC_SetDistance(75, 75);
                     ucMotorState = 1; //drive straight
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -280,11 +280,11 @@ void loop()
                     }
                     break;
                   }
-                //Turn right
+                //Turn left
                 case 2:
                   {
                     ENC_SetDistance(115, 115); //turn 270 left to get 90 right bc my robot doesn't like turning right
-                    ucMotorState = 2;
+                    ucMotorState = 3;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                     ucMotorStateIndex = 3;
