@@ -343,7 +343,7 @@ void loop()
                 //Head along obstacle towards beacon
                 case 8:
                   {
-                    ENC_SetDistance(252, 252); //100 ticks means it moves forward 37cm
+                    ENC_SetDistance(250, 250); //100 ticks means it moves forward 37cm
                     ucMotorState = 1;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
