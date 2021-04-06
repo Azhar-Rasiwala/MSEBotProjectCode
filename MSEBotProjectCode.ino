@@ -283,7 +283,7 @@ void loop()
                 //Turn left
                 case 2:
                   {
-                    ENC_SetDistance(115, 115); //turn 270 left to get 90 right bc my robot doesn't like turning right
+                    ENC_SetDistance(100, 100); //turn 270 left to get 90 right bc my robot doesn't like turning right
                     ucMotorState = 3;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -303,7 +303,7 @@ void loop()
                 //Head Along Obstacle
                 case 4:
                   {
-                    ENC_SetDistance(90, 90); //need enough clearance so limit switch bumper doesn't bump into object
+                    ENC_SetDistance(150, 150); //need enough clearance so limit switch bumper doesn't bump into object
                     ucMotorState = 1;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -323,10 +323,10 @@ void loop()
                 //turn parallel to door
                 case 6:
                   {
-                    ENC_SetDistance(32, 32); //35 ticks is a perfect 90 degree turn //note 75 ticks is 180 degrees
+                    ENC_SetDistance(345, 345); //35 ticks is a perfect 90 degree turn //note 75 ticks is 180 degrees
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
-                    ucMotorState = 2; //left turn
+                    ucMotorState = 3; //left turn
                     ucMotorStateIndex = 7;
                     break;
                   }
