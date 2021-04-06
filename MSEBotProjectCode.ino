@@ -120,12 +120,12 @@ int iLastButtonState = HIGH;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////FOR QUICK AND EASY MOTOR ADJUSTMENT//////////////////////////////////////////////////
 uint8_t leftWheelSpeedMod = 12;
-uint8_t rightWheelSpeedMod = 8; 
+uint8_t rightWheelSpeedMod = 8;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //If beacon is hit change state
 boolean beaconHit = false;
 //Climbing Timer
-const long climbInterval = 9500; // edited per robot based on time to reach top
+const long climbInterval = 11000; // edited per robot based on time to reach top
 unsigned long startClimb = 0;
 
 // Declare our SK6812 SMART LED object:
@@ -170,9 +170,9 @@ void setup() {
   SmartLEDs.clear();                          // Set all pixel colours to off
   SmartLEDs.show();                           // Send the updated pixel colours to the hardware
 
-  
+
   setupClimbing();
-   
+
 }
 
 void loop()
@@ -409,20 +409,22 @@ void loop()
                         }
                       //Start turning motor
                       case 3:
-                      {
-                          startClimb = millis(); 
-                          startMotion();
-                          ucMotorStateIndex2 = 4; 
-                          break;
-                      }
-                      case 4:
-                      {
-                        if (millis()- startClimb > climbInterval)
                         {
-                          stopMotion();
+                          startMotion();
+                          if (CR1_ui8IRDatum != 0x55 && CR1_ui8IRDatum != 0x41) {
+                            startClimb = millis();
+                            ucMotorStateIndex2 = 4;
+                            break;
+                          }
                         }
-                      }
-                      
+                      case 4:
+                        {
+                          if (millis() - startClimb > climbInterval)
+                          {
+                            stopMotion();
+                          }
+                        }
+
                     }
                   }
               }
