@@ -303,7 +303,7 @@ void loop()
                 //Head Along Obstacle
                 case 4:
                   {
-                    ENC_SetDistance(85, 85); //need enough clearance so limit switch bumper doesn't bump into object
+                    ENC_SetDistance(90, 90); //need enough clearance so limit switch bumper doesn't bump into object
                     ucMotorState = 1;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
