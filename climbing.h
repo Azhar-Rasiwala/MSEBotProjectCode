@@ -22,7 +22,7 @@ void startMotion()
 
 void stopMotion()
 {
-  ledcWrite(5, 0);
+  ledcWrite(5, 150);
   ledcWrite(6, 0);
 }
 

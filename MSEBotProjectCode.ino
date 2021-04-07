@@ -107,7 +107,7 @@ unsigned long CR1_ulMotorTimerPrevious;
 unsigned long CR1_ulMotorTimerNow;
 unsigned char ucMotorStateIndex = 0;
 //Inner switch index
-unsigned char ucMotorStateIndex2 = 0;
+unsigned char ucMotorStateIndex2 = 9;
 
 unsigned long CR1_ulHeartbeatTimerPrevious;
 unsigned long CR1_ulHeartbeatTimerNow;
@@ -119,7 +119,7 @@ int iButtonState;
 int iLastButtonState = HIGH;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////FOR QUICK AND EASY MOTOR ADJUSTMENT//////////////////////////////////////////////////
-uint8_t leftWheelSpeedMod = 15;
+uint8_t leftWheelSpeedMod = 20;
 uint8_t rightWheelSpeedMod = 10;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //If beacon is hit change state
@@ -202,7 +202,7 @@ void loop()
         if (!btRun)
         {
           ucMotorStateIndex = 0;
-          ucMotorStateIndex2 = 0;
+          
           beaconHit = false;
           ucMotorState = 0;
           move(0);
@@ -263,7 +263,7 @@ void loop()
                 //Position bot 4.5 inches from wall or else limit switch bumper will crash into wall
                 case 0:
                   {
-                    ENC_SetDistance(80, 80);
+                    ENC_SetDistance(75, 75);
                     ucMotorState = 1; //drive straight
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -283,7 +283,7 @@ void loop()
                 //Turn left
                 case 2:
                   {
-                    ENC_SetDistance(75, 75); //turn 270 left to get 90 right bc my robot doesn't like turning right
+                    ENC_SetDistance(85, 85); //turn 270 left to get 90 right bc my robot doesn't like turning right
                     ucMotorState = 3;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -303,7 +303,7 @@ void loop()
                 //Head Along Obstacle
                 case 4:
                   {
-                    ENC_SetDistance(180, 180); //need enough clearance so limit switch bumper doesn't bump into object
+                    ENC_SetDistance(170, 170); //need enough clearance so limit switch bumper doesn't bump into object
                     ucMotorState = 1;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -323,7 +323,7 @@ void loop()
                 //turn parallel to door
                 case 6:
                   {
-                    ENC_SetDistance(230, 230);
+                    ENC_SetDistance(240, 240);
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                     ucMotorState = 3; //left turn
@@ -343,7 +343,7 @@ void loop()
                 //Head along obstacle towards beacon
                 case 8:
                   {
-                    ENC_SetDistance(210, 210); //100 ticks means it moves forward 37cm
+                    ENC_SetDistance(220, 220); //100 ticks means it moves forward 37cm
                     ucMotorState = 1;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -363,7 +363,7 @@ void loop()
                 case 10:
                   //Turn 270
                   {
-                    ENC_SetDistance(230, 230);
+                    ENC_SetDistance(240, 240);
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                     ucMotorState = 3; //left turn
@@ -381,69 +381,45 @@ void loop()
                   }
                 case 12: //look for beacon
                   {
-                    if (CR1_ui8IRDatum == 0x55 && beaconHit == false)
+                    ENC_SetDistance(210, 210); //100 ticks means it moves forward 37cm
+                    ucMotorState = 1;
+                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
+                    CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
+                    ucMotorStateIndex = 13;
+                    break;
+                  }
+                case 13:
+                  {
+                    if (ENC_ISMotorRunning() == 0)
                     {
-                      ucMotorStateIndex2 = 1;
+                      ucMotorStateIndex = 14;
+                      ucMotorState = 5;
                     }
-                    else if (CR1_ui8IRDatum == 0x41 && beaconHit == false)
+                  }
+                case 14:
+                  {
+
+                    if (CR1_ui8IRDatum == 0x41)
                     {
-                      ucMotorStateIndex2 = 2;
-                      beaconHit = true;
+                      ucMotorStateIndex2 = 0;
                     }
-                    else
-                    {
-                      if (beaconHit == false)
-                      {
-                        ucMotorStateIndex2 = 0;
-                      }
-                    }
-                    switch (ucMotorStateIndex2)
-                    {
-                      //Scan for beacon
+                    //Start turning motor
+                    switch (ucMotorStateIndex2) {
                       case 0:
                         {
-                          ENC_SetDistance(5, 5);
-                          ucMotorState = 2;
-                          CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
-                          CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
-                          break;
-                        }
-
-                      //Head towards beacon
-                      case 1:
-                        {
-                          ENC_SetDistance(30, 30);
-                          ucMotorState = 1;
-                          CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
-                          CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
-                          break;
-                        }
-
-                      //Stop at beacon
-                      case 2:
-                        {
-                          ucMotorState = 0;
-                          ucMotorStateIndex2 = 3;
-                          break;
-                        }
-                      //Start turning motor
-                      case 3:
-                        {
                           startMotion();
-
                           startClimb = millis();
-                          ucMotorStateIndex2 = 4;
+                          ucMotorStateIndex2 = 1;
                           break;
-
                         }
-                      case 4:
+                      case 1:
                         {
                           if (millis() - startClimb > climbInterval)
                           {
                             stopMotion();
                           }
+                          break;
                         }
-
                     }
                   }
               }
