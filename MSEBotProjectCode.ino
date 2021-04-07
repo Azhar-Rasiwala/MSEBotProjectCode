@@ -119,13 +119,13 @@ int iButtonState;
 int iLastButtonState = HIGH;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////FOR QUICK AND EASY MOTOR ADJUSTMENT//////////////////////////////////////////////////
-uint8_t leftWheelSpeedMod = 12;
-uint8_t rightWheelSpeedMod = 8;
+uint8_t leftWheelSpeedMod = 15;
+uint8_t rightWheelSpeedMod = 10;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //If beacon is hit change state
 boolean beaconHit = false;
 //Climbing Timer
-const long climbInterval = 11000; // edited per robot based on time to reach top
+const long climbInterval = 11500; // edited per robot based on time to reach top
 unsigned long startClimb = 0;
 
 // Declare our SK6812 SMART LED object:
@@ -263,7 +263,7 @@ void loop()
                 //Position bot 4.5 inches from wall or else limit switch bumper will crash into wall
                 case 0:
                   {
-                    ENC_SetDistance(75, 75);
+                    ENC_SetDistance(80, 80);
                     ucMotorState = 1; //drive straight
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -283,7 +283,7 @@ void loop()
                 //Turn left
                 case 2:
                   {
-                    ENC_SetDistance(90, 90); //turn 270 left to get 90 right bc my robot doesn't like turning right
+                    ENC_SetDistance(75, 75); //turn 270 left to get 90 right bc my robot doesn't like turning right
                     ucMotorState = 3;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -303,7 +303,7 @@ void loop()
                 //Head Along Obstacle
                 case 4:
                   {
-                    ENC_SetDistance(160, 160); //need enough clearance so limit switch bumper doesn't bump into object
+                    ENC_SetDistance(180, 180); //need enough clearance so limit switch bumper doesn't bump into object
                     ucMotorState = 1;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -323,7 +323,7 @@ void loop()
                 //turn parallel to door
                 case 6:
                   {
-                    ENC_SetDistance(270, 270); //35 ticks is a perfect 90 degree turn //note 75 ticks is 180 degrees
+                    ENC_SetDistance(230, 230);
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                     ucMotorState = 3; //left turn
@@ -343,7 +343,7 @@ void loop()
                 //Head along obstacle towards beacon
                 case 8:
                   {
-                    ENC_SetDistance(120, 120); //100 ticks means it moves forward 37cm
+                    ENC_SetDistance(210, 210); //100 ticks means it moves forward 37cm
                     ucMotorState = 1;
                     CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
@@ -360,7 +360,26 @@ void loop()
                     }
                     break;
                   }
-                case 10: //look for beacon
+                case 10:
+                  //Turn 270
+                  {
+                    ENC_SetDistance(230, 230);
+                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
+                    CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
+                    ucMotorState = 3; //left turn
+                    ucMotorStateIndex = 11;
+                    break;
+                  }
+                case 11:
+                  {
+                    if (ENC_ISMotorRunning() == 0)
+                    {
+                      ucMotorStateIndex = 12;
+                      ucMotorState = 5;
+                    }
+                    break;
+                  }
+                case 12: //look for beacon
                   {
                     if (CR1_ui8IRDatum == 0x55 && beaconHit == false)
                     {
@@ -383,20 +402,20 @@ void loop()
                       //Scan for beacon
                       case 0:
                         {
-                          ENC_SetDistance(1, 1);
+                          ENC_SetDistance(5, 5);
                           ucMotorState = 2;
-                          CR1_ui8LeftWheelSpeed = 135;
-                          CR1_ui8RightWheelSpeed = 135;
+                          CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
+                          CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                           break;
                         }
 
                       //Head towards beacon
                       case 1:
                         {
-                          ENC_SetDistance(10, 10);
+                          ENC_SetDistance(30, 30);
                           ucMotorState = 1;
-                          CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed;
-                          CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed;
+                          CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
+                          CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                           break;
                         }
 
@@ -411,11 +430,11 @@ void loop()
                       case 3:
                         {
                           startMotion();
-                          if (CR1_ui8IRDatum != 0x55 && CR1_ui8IRDatum != 0x41) {
-                            startClimb = millis();
-                            ucMotorStateIndex2 = 4;
-                            break;
-                          }
+
+                          startClimb = millis();
+                          ucMotorStateIndex2 = 4;
+                          break;
+
                         }
                       case 4:
                         {
