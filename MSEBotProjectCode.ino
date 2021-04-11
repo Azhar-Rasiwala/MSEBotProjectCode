@@ -170,7 +170,7 @@ void setup() {
   SmartLEDs.clear();                          // Set all pixel colours to off
   SmartLEDs.show();                           // Send the updated pixel colours to the hardware
 
-  
+  //Setup climbing routines (see climbing.h for details)
   setupClimbing();
    
 }
