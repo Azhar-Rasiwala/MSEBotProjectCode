@@ -120,13 +120,13 @@ int iButtonState;
 int iLastButtonState = HIGH;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////FOR QUICK AND EASY MOTOR ADJUSTMENT//////////////////////////////////////////////////
-uint8_t leftWheelSpeedMod = 11;
-uint8_t rightWheelSpeedMod = 8; 
+uint8_t leftWheelSpeedMod = 8;
+uint8_t rightWheelSpeedMod = 77; 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //If beacon is hit change state
 boolean beaconHit = false;
 //Climbing Timer
-const long climbInterval = 8000; // edited per robot based on time to reach top
+const long climbInterval = 30000; // edited per robot based on time to reach top
 unsigned long startClimb = 0;
 
 // Declare our SK6812 SMART LED object:
@@ -214,7 +214,7 @@ void loop()
     }
   }
   iLastButtonState = iButtonValue;             // store button state
-
+/*
   if (!digitalRead(ciLimitSwitch))
   {
     btRun = 0; //if limit switch is pressed stop bot
@@ -222,7 +222,7 @@ void loop()
     ucMotorState = 0;
     move(0);
   }
-
+*/
   if (Serial2.available() > 0) {               // check for incoming data
     CR1_ui8IRDatum = Serial2.read();          // read the incoming byte
     // Serial.println(iIncomingByte, HEX);        // uncomment to output received character
@@ -264,9 +264,11 @@ void loop()
                 //Position bot 4.5 inches from wall or else limit switch bumper will crash into wall
                 case 0:
                   {
-                    ENC_SetDistance(100, 100);
+         
+                    ENC_SetDistance(-20, 20);
+                    //ENC_ClearLeftOdometer();
                     ucMotorState = 1; //drive straight
-                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
+                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed - leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                     ucMotorStateIndex = 1; //proceed to next case
                     break;
@@ -274,6 +276,8 @@ void loop()
                 //stop
                 case 1:
                   {
+                   // Serial.println(ENC_vi32RightOdometer);
+                     Serial.println(ENC_vi32LeftOdometer);
                     if (ENC_ISMotorRunning() == 0)
                     {
                       ucMotorStateIndex = 2;
@@ -281,12 +285,13 @@ void loop()
                     }
                     break;
                   }
-                //Turn right
-                case 2:
-                  {
-                    ENC_SetDistance(115, 115); //turn 270 left to get 90 right bc my robot doesn't like turning right
-                    ucMotorState = 2;
-                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
+                /*Turn Right  ```````````````````````````````````````````````````````````````````````````````````````````````````` */
+                case 2: {
+                    //Serial.println("Case 2");
+                    ENC_SetDistance(-49, -49); //turn 270 left to get 90 right bc my robot doesn't like turning right
+                   // ENC_ClearLeftOdometer();
+                    ucMotorState = 3;
+                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed - leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                     ucMotorStateIndex = 3;
                     break;
@@ -301,12 +306,13 @@ void loop()
                     }
                     break;
                   }
-                //Head Along Obstacle
+                //Head Away from door
                 case 4:
                   {
-                    ENC_SetDistance(70, 70); //need enough clearance so limit switch bumper doesn't bump into object
+                    ENC_SetDistance(-185, 185); //need enough clearance so limit switch bumper doesn't bump into object
+                   // ENC_ClearLeftOdometer();
                     ucMotorState = 1;
-                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
+                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed - leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                     ucMotorStateIndex = 5;
                     break;
@@ -324,8 +330,9 @@ void loop()
                 //turn parallel to door
                 case 6:
                   {
-                    ENC_SetDistance(35, 35); //35 ticks is a perfect 90 degree turn //note 75 ticks is 180 degrees
-                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
+                    ENC_SetDistance(15, 15);
+                    //ENC_ClearLeftOdometer();
+                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed - leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                     ucMotorState = 2; //left turn
                     ucMotorStateIndex = 7;
@@ -341,12 +348,13 @@ void loop()
                     }
                     break;
                   }
-                //Head along obstacle towards beacon
+                //Travel Parallel to door
                 case 8:
                   {
-                    ENC_SetDistance(260, 260); //100 ticks means it moves forward 37cm
+                    ENC_SetDistance(-245, 245); //100 ticks means it moves forward 37cm
+                   // ENC_ClearLeftOdometer();
                     ucMotorState = 1;
-                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed + leftWheelSpeedMod;
+                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed - leftWheelSpeedMod;
                     CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
                     ucMotorStateIndex = 9;
                     break;
@@ -357,81 +365,76 @@ void loop()
                     if (ENC_ISMotorRunning() == 0)
                     {
                       ucMotorStateIndex = 10;
+                      ucMotorState = 0;
+                    }
+                    break;
+                  }
+                  case 10:
+                  {
+                    ENC_SetDistance(39, 39);  
+                   // ENC_ClearLeftOdometer();
+                    ucMotorState = 2;
+                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed - leftWheelSpeedMod;
+                    CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
+                    ucMotorStateIndex = 11;
+                    break;
+                  }
+                  case 11:
+                  {
+                    if (ENC_ISMotorRunning() == 0)
+                    {
+                      ucMotorStateIndex = 12;
+                      ucMotorState = 0;
+                      
+                    }
+                    break;
+                  }
+                  case 12:
+                  {
+                    ENC_SetDistance(-170, 170); 
+                   // ENC_ClearLeftOdometer();
+                    ucMotorState = 1;
+                    CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed - leftWheelSpeedMod;
+                    CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed + rightWheelSpeedMod;
+                    ucMotorStateIndex = 13;
+                    break;
+                  }
+                //Turn to face beacon
+                case 13:
+                  {
+                    if (ENC_ISMotorRunning() == 0)
+                    {
+                      ucMotorStateIndex = 14;
                       ucMotorState = 5;
                     }
                     break;
                   }
-                case 10: //look for beacon
+                case 14: //look for beacon
                   {
-                    if (CR1_ui8IRDatum == 0x55 && beaconHit == false)
-                    {
-                      ucMotorStateIndex2 = 1;
-                    }
-                    else if (CR1_ui8IRDatum == 0x41 && beaconHit == false)
+                    if (CR1_ui8IRDatum == 0x41)
                     {
                       ucMotorStateIndex2 = 2;
                       beaconHit = true;
-                    }
-                    else
-                    {
-                      if (beaconHit == false)
-                      {
-                        ucMotorStateIndex2 = 0;
-                      }
-                    }
-                    switch (ucMotorStateIndex2)
-                    {
-                      //Scan for beacon
-                      case 0:
-                        {
-                          ENC_SetDistance(1, 1);
-                          ucMotorState = 2;
-                          CR1_ui8LeftWheelSpeed = 135;
-                          CR1_ui8RightWheelSpeed = 135;
-                          break;
-                        }
+                    
+                      startClimb = millis(); 
+                      startMotion();
+                      ucMotorStateIndex2 = 4; 
 
-                      //Head towards beacon
-                      case 1:
-                        {
-                          ENC_SetDistance(10, 10);
-                          ucMotorState = 1;
-                          CR1_ui8LeftWheelSpeed = CR1_ui8WheelSpeed;
-                          CR1_ui8RightWheelSpeed = CR1_ui8WheelSpeed;
-                          break;
-                        }
-
-                      //Stop at beacon
-                      case 2:
-                        {
-                          ucMotorState = 0;
-                          ucMotorStateIndex2 = 3;
-                          break;
-                        }
-                      //Start turning motor
-                      case 3:
-                      {
-                          startClimb = millis(); 
-                          startMotion();
-                          ucMotorStateIndex2 = 4; 
-                          break;
-                      }
-                      case 4:
-                      {
-                        if (millis()- startClimb > climbInterval)
+                       if (millis()- startClimb > climbInterval)
                         {
                           stopMotion();
                         }
                       }
                       
+                      
                     }
-                  }
+                  } 
               }
             }
           }
           CR1_ucMainTimerCaseCore1 = 1;
           break;
-        }
+        
       //###############################################################################
       case 1:
         {
